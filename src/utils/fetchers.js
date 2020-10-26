@@ -7,7 +7,7 @@ export const fetchWithParams = async (urlStr, params) => {
 };
 
 export const fetchCityWeather = async (cityName) => {
-  const url = 'http://api.openweathermap.org/data/2.5/weather';
+  const url = 'https://api.openweathermap.org/data/2.5/weather';
 
   const params = {
     appid: process.env.REACT_APP_OPENWEATHER_API_KEY,
