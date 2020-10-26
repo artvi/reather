@@ -18,6 +18,7 @@ export const citiesSlice = createSlice({
   initialState: {
     names: [],
     weatherByName: {},
+    currentCityData: undefined,
     loading: 'idle',
     error: null,
     currentRequestId: undefined,
@@ -32,6 +33,9 @@ export const citiesSlice = createSlice({
         return { ...acc, data };
       }, {});
     },
+    setCurrentCityData: (state, action) => {
+      state.currentCityData = action.payload
+    } 
   },
   extraReducers: {
     [fetchCityData.pending]: (state, action) => {
@@ -64,7 +68,7 @@ export const citiesSlice = createSlice({
   },
 });
 
-export const { addCity, removeCity } = citiesSlice.actions;
+export const { addCity, removeCity, setCurrentCityData } = citiesSlice.actions;
 
 export const selectCities = (state) => state.cities;
 

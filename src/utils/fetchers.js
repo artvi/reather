@@ -6,11 +6,14 @@ export const fetchWithParams = async (urlStr, params) => {
   return res;
 };
 
+const openweatherAPI = 'https://api.openweathermap.org/data/2.5/weather';
+const openweatherAPIKey = process.env.REACT_APP_OPENWEATHER_API_KEY;
+
 export const fetchCityWeather = async (cityName) => {
-  const url = 'https://api.openweathermap.org/data/2.5/weather';
+  const url = openweatherAPI;
 
   const params = {
-    appid: process.env.REACT_APP_OPENWEATHER_API_KEY,
+    appid: openweatherAPIKey,
     q: cityName,
     lang: 'en',
     units: 'metric',
@@ -25,3 +28,18 @@ export const fetchCityWeather = async (cityName) => {
     throw err;
   }
 };
+
+export const fetchWeatherByLocation = async (lat, lon) => {
+  const url = openweatherAPI;
+
+  const params = {
+    appid: openweatherAPIKey,
+    lang: 'en',
+    units: 'metric',
+    lat,
+    lon
+  }
+
+  const res = await fetchWithParams(url, params);
+  return res;
+} 
