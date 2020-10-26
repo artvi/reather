@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Form, Col, Button, Spinner } from 'react-bootstrap';
-import { fetchWeatherData } from './citiesSlice';
 
 const spinner = (
   <Spinner animation="border" size="sm" role="status">
@@ -10,15 +8,14 @@ const spinner = (
   </Spinner>
 );
 
-const CityForm = ({ error, loading }) => {
+const CityForm = ({ error, loading, onSubmit }) => {
   const [input, setInput] = useState('');
-  
-  const dispatch = useDispatch();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await dispatch(fetchWeatherData(input));
+      const result = await onSubmit(input);
       unwrapResult(result);
       setInput('');
     } catch (err) {}
@@ -34,11 +31,11 @@ const CityForm = ({ error, loading }) => {
     <Form onSubmit={handleSubmit}>
       <Form.Row>
         <Col>
-          <Form.Label>Enter city name you want to follow</Form.Label>
+          <Form.Label className='text-wrap'>Enter city name you want to follow</Form.Label>
         </Col>
       </Form.Row>
       <Form.Row>
-        <Col className="col-10">
+        <Col>
           <Form.Control
             type="text"
             required
@@ -49,8 +46,9 @@ const CityForm = ({ error, loading }) => {
             className={isInvalidCityName && 'is-invalid'}
           />
         </Col>
-        <Col className="col-2">
+        <Col className="col-auto">
           <Button
+            className="ml-2 text-nowrap"
             variant="outline-secondary"
             size="sm"
             type="submit"

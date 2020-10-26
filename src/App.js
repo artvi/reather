@@ -1,14 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Container, Navbar, Col } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { Container, Navbar, Row, Col } from 'react-bootstrap';
 import CityForm from './features/cities/CityForm';
 import CitiesList from './features/cities/CitiesList';
-import { selectCities } from './features/cities/citiesSlice';
+import { selectCities, removeCity, fetchCityData } from './features/cities/citiesSlice';
 
-console.log(process.env.REACT_APP_OPENWEATHER_API_KEY)
 const App = () => {
   const cities = useSelector(selectCities);
+  const dispatch = useDispatch();
+
+  const handleRemoveCity = (cityName) => () => dispatch(removeCity(cityName));
+  const handleAddCity = (cityName) => dispatch(fetchCityData(cityName));
+
   const { error, loading, weatherByName } = cities;
   return (
     <div className="App">
@@ -16,13 +20,15 @@ const App = () => {
         <Navbar.Brand>Weather App</Navbar.Brand>
       </Navbar>
       <Container>
-        <CityForm error={error} loading={loading} />
-        <Col className='col-10'>
-        <CitiesList weatherByName={weatherByName} />
-      </Col>
+        <Row className='pt-3'>
+          <Col>
+            <CityForm error={error} loading={loading} onSubmit={handleAddCity}/>
+            <CitiesList weatherByName={weatherByName} handleDelete={handleRemoveCity} />
+          </Col>
+        </Row>
       </Container>
     </div>
   );
-}
+};
 
 export default App;

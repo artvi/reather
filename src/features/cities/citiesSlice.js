@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCityWeather } from '../../utils/fetchers';
 
-export const fetchWeatherData = createAsyncThunk(
+export const fetchCityData = createAsyncThunk(
   'cities/fetchCityForecast',
   async (cityName, { getState, requestId }) => {
     const { loading, currentRequestId } = getState().cities;
     if (loading !== 'pending' || requestId !== currentRequestId) {
       return;
     }
-      const response = await fetchCityWeather(cityName);
-      return response;
+    const response = await fetchCityWeather(cityName);
+    return response;
   }
 );
 
@@ -22,28 +22,39 @@ export const citiesSlice = createSlice({
     error: null,
     currentRequestId: undefined,
   },
-  reducers: {},
+  reducers: {
+    removeCity: (state, action) => {
+      const { names, weatherByName } = state;
+      const filteredNames = names.filter((n) => n !== action.payload);
+      state.names = filteredNames;
+      state.weatherByName = filteredNames.reduce((acc, el) => {
+        const data = weatherByName[el];
+        return { ...acc, data };
+      }, {});
+    },
+  },
   extraReducers: {
-    [fetchWeatherData.pending]: (state, action) => {
+    [fetchCityData.pending]: (state, action) => {
       if (state.loading === 'idle') {
         state.loading = 'pending';
         state.error = null;
         state.currentRequestId = action.meta.requestId;
       }
     },
-    [fetchWeatherData.fulfilled]: (state, action) => {
+    [fetchCityData.fulfilled]: (state, action) => {
       const { requestId } = action.meta;
       if (state.loading === 'pending' && state.currentRequestId === requestId) {
         state.loading = 'idle';
-        const { payload: { name  }} = action;
+        const {
+          payload: { name },
+        } = action;
         state.names.push(name);
         state.weatherByName[name] = action.payload;
         state.currentRequestId = undefined;
       }
     },
-    [fetchWeatherData.rejected]: (state, action) => {
+    [fetchCityData.rejected]: (state, action) => {
       const { requestId } = action.meta;
-      console.log('REQUEST REJECTED');
       if (state.loading === 'pending' && state.currentRequestId === requestId) {
         state.loading = 'idle';
         state.error = action.error;
@@ -53,7 +64,7 @@ export const citiesSlice = createSlice({
   },
 });
 
-export const { addCity, removeLast } = citiesSlice.actions;
+export const { addCity, removeCity } = citiesSlice.actions;
 
 export const selectCities = (state) => state.cities;
 
