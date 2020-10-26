@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Container, Navbar, Row, Col, Nav } from 'react-bootstrap';
 import CityForm from './components/CityForm';
 import CitiesList from './components/CitiesList';
+import Alert from './components/Alert';
 import {
   selectCities,
   removeCity,
@@ -32,7 +33,7 @@ const App = () => {
   useEffect(() => {
     getLocationData().then((data) => dispatch(setCurrentCityData(data)));
     if (names.length > 0) {
-      names.forEach(n => dispatch(fetchCityData(n)));
+      names.forEach((n) => dispatch(fetchCityData(n)));
     }
     // eslint-disable-next-line
   }, []);
@@ -48,6 +49,7 @@ const App = () => {
           </Nav>
         )}
       </Navbar>
+      <Alert error={error} />
       <Container>
         <Row className="pt-3">
           <Col>
