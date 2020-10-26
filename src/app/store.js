@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import citiesReducer from '../features/cities/citiesSlice';
+import { saveState } from '../localStorage';
 
-export default configureStore({
+
+const store = configureStore({
   reducer: {
     cities: citiesReducer,
   },
 });
+
+store.subscribe(() => {
+  saveState(store.getState().cities.names);
+});
+
+export default store;

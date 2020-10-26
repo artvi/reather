@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCityWeather } from '../../utils/fetchers';
+import { loadState } from '../../localStorage';
+
+const savedNames = loadState();
 
 export const fetchCityData = createAsyncThunk(
   'cities/fetchCityForecast',
-  async (cityName, { getState, requestId }) => {
-    const { loading, currentRequestId } = getState().cities;
-    if (loading !== 'pending' || requestId !== currentRequestId) {
-      return;
-    }
+  async (cityName) => {
     const response = await fetchCityWeather(cityName);
     return response;
   }
@@ -16,7 +15,7 @@ export const fetchCityData = createAsyncThunk(
 export const citiesSlice = createSlice({
   name: 'cities',
   initialState: {
-    names: [],
+    names: savedNames || [],
     weatherByName: {},
     currentCityData: undefined,
     loading: 'idle',
@@ -34,8 +33,8 @@ export const citiesSlice = createSlice({
       }, {});
     },
     setCurrentCityData: (state, action) => {
-      state.currentCityData = action.payload
-    } 
+      state.currentCityData = action.payload;
+    },
   },
   extraReducers: {
     [fetchCityData.pending]: (state, action) => {
@@ -46,18 +45,17 @@ export const citiesSlice = createSlice({
       }
     },
     [fetchCityData.fulfilled]: (state, action) => {
-      const { requestId } = action.meta;
-      if (state.loading === 'pending' && state.currentRequestId === requestId) {
-        state.loading = 'idle';
-        const {
-          payload: { name },
-        } = action;
-        state.names.push(name);
-        state.weatherByName[name] = action.payload;
-        state.currentRequestId = undefined;
-      }
+      state.loading = 'idle';
+      const {
+        payload: { name },
+      } = action;
+      const newNames = new Set([...state.names, name]);
+      state.names = [...newNames];
+      state.weatherByName[name] = action.payload;
+      state.currentRequestId = undefined;
     },
     [fetchCityData.rejected]: (state, action) => {
+      console.log('REQUEST REJECTED');
       const { requestId } = action.meta;
       if (state.loading === 'pending' && state.currentRequestId === requestId) {
         state.loading = 'idle';

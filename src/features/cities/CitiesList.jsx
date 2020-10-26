@@ -10,7 +10,7 @@ const CitiesList = ({ weatherByName, handleDelete }) => {
         const data = weatherByName[key];
         const { id, name, sys } = data;
         return (
-          <ListGroup.Item size="sm" className="py-1" id={id}>
+          <ListGroup.Item size="sm" className="py-1" key={id}>
             <Row>
               <Col>
                 {name}, {sys.country}
@@ -19,7 +19,7 @@ const CitiesList = ({ weatherByName, handleDelete }) => {
               <Col className="col-auto">
                 <button
                   type="button"
-                  class="close"
+                  className="close"
                   onClick={handleDelete(name)}
                 >
                   <span aria-hidden="true">&times;</span>
