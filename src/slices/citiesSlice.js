@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchCityWeather } from '../../utils/fetchers';
-import { loadState } from '../../localStorage';
+import { fetchCityWeather } from '../utils/fetchers';
+import { loadState } from '../utils/localStorage';
 
 const savedNames = loadState();
 
@@ -55,7 +55,6 @@ export const citiesSlice = createSlice({
       state.currentRequestId = undefined;
     },
     [fetchCityData.rejected]: (state, action) => {
-      console.log('REQUEST REJECTED');
       const { requestId } = action.meta;
       if (state.loading === 'pending' && state.currentRequestId === requestId) {
         state.loading = 'idle';

@@ -2,14 +2,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Navbar, Row, Col, Nav } from 'react-bootstrap';
-import CityForm from './features/cities/CityForm';
-import CitiesList from './features/cities/CitiesList';
+import CityForm from './components/CityForm';
+import CitiesList from './components/CitiesList';
 import {
   selectCities,
   removeCity,
   fetchCityData,
   setCurrentCityData,
-} from './features/cities/citiesSlice';
+} from './slices/citiesSlice';
 import { getLocation } from './utils/getLocation';
 import { fetchWeatherByLocation } from './utils/fetchers';
 
