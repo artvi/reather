@@ -2,5 +2,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Simple SPA for weather forecast subscriptions.
 
+App is available [here](https://reather.herokuapp.com/) 
 
 
