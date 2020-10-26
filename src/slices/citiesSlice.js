@@ -29,7 +29,7 @@ export const citiesSlice = createSlice({
       state.names = filteredNames;
       state.weatherByName = filteredNames.reduce((acc, el) => {
         const data = weatherByName[el];
-        return { ...acc, data };
+        return { ...acc, [el]: data };
       }, {});
     },
     setCurrentCityData: (state, action) => {
